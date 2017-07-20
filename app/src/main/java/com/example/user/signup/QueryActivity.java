@@ -50,9 +50,8 @@ public class QueryActivity extends AppCompatActivity {
                 String msg_id = msg_id_Array.get(arg2);
 
 
-                //new TheDeleteTask().execute(msg_id);
-
-                  //Toast.makeText(QueryActivity.this,"ID：" + arg3 + " 選單文字："+ listView.getItemAtPosition(arg2).toString(), Toast.LENGTH_SHORT).show();
+                new TheDeleteTask().execute(msg_id);
+                //Toast.makeText(QueryActivity.this,"ID：" + arg3 + " 選單文字："+ listView.getItemAtPosition(arg2).toString(), Toast.LENGTH_SHORT).show();
               }
         });
 
@@ -73,6 +72,7 @@ public class QueryActivity extends AppCompatActivity {
     {
         @Override
         protected void onPreExecute() {
+            listView.setAdapter(null);
 
         }
 
@@ -241,6 +241,8 @@ public class QueryActivity extends AppCompatActivity {
                     if (query_result.equals("SUCCESS")) {
 
                         Toast.makeText(QueryActivity.this, "紀錄刪除成功 ", Toast.LENGTH_SHORT).show();
+
+                        new TheQueryTask().execute("123456789");
 
                     } else if (query_result.equals("FAILURE")) {
 
