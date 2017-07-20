@@ -56,7 +56,7 @@ public class SignupActivity extends AsyncTask<String, Void, String> {
 
             data += "&regId=" + URLEncoder.encode(regId, "UTF-8");
 
-            link = "http://140.130.33.101/signup.php" + data;
+            link = "http://140.130.33.152/signup.php" + data;
 
             URL url = new URL(link);
 

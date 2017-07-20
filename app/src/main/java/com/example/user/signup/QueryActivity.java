@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -20,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class QueryActivity extends AppCompatActivity {
 
@@ -30,7 +34,7 @@ public class QueryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query);
 
-        String[] func = {"星期一","星期二","星期三"};
+       // String[] func = {"星期一","星期二","星期三"};
 
         listView = (ListView) findViewById(R.id.listview);
 
@@ -68,7 +72,7 @@ public class QueryActivity extends AppCompatActivity {
 
                 data = "?phone=" + URLEncoder.encode(phoneNumber, "UTF-8");
 
-                link = "http://140.130.33.101/QueryMessage.php" + data;
+                link = "http://140.130.33.152/QueryMessage.php" + data;
 
                 URL url = new URL(link);
 
@@ -79,7 +83,6 @@ public class QueryActivity extends AppCompatActivity {
                 result = bufferedReader.readLine();
 
                 return result;
-
             } catch (Exception e) {
 
                 return new String("Exception: " + e.getMessage());
@@ -94,22 +97,35 @@ public class QueryActivity extends AppCompatActivity {
 
             ArrayList<String> stringArray = new ArrayList<String>();
 
-            Log.d("result=",result);
+            Log.d("result*",result);
+
+
 
             if (jsonStr != null) try {
 
                 JSONArray new_array = new JSONArray(result);
+                List<HashMap<String , String>> list = new ArrayList<>();            //使用List存入HashMap，用來顯示ListView上面的文字。
 
                 for (int i = 0, count = new_array.length(); i < count; i++) {
                     try {
+
+                        HashMap<String , String> hashMap = new HashMap<>();
 
                         JSONObject jsonObject = new_array.getJSONObject(i);
 
                         String msg = jsonObject.getString("msg").toString();
 
+                        String created_date = jsonObject.getString("created_date").toString();
+
+                        hashMap.put("msg" , msg);  //把msg , text存入HashMap之中
+
+                        hashMap.put("created_date" , created_date);
+
+                        list.add(hashMap);        //把HashMap存入list之中
+
                         stringArray.add(msg);
 
-                        Log.d("result=", msg);
+                        //Log.d("result=", msg);
 
                     } catch (JSONException e) {
 
@@ -117,9 +133,17 @@ public class QueryActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayAdapter adapter = new ArrayAdapter(QueryActivity.this, android.R.layout.simple_list_item_1, stringArray);
+                //ArrayAdapter adapter = new ArrayAdapter(QueryActivity.this, android.R.layout.simple_list_item_1, stringArray);
 
-                listView.setAdapter(adapter);
+                //listView.setAdapter(adapter);
+
+                ListAdapter listAdapter = new SimpleAdapter(
+                        QueryActivity.this,
+                        list,
+                        android.R.layout.simple_list_item_2 ,
+                        new String[]{"msg" , "created_date"} ,
+                        new int[]{android.R.id.text1 , android.R.id.text2});
+                   listView.setAdapter(listAdapter);
 
             } catch (JSONException e) {
 

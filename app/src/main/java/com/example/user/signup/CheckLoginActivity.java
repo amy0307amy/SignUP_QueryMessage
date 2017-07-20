@@ -45,7 +45,7 @@ public class CheckLoginActivity extends AsyncTask<String, Void, String> {
             data += "&password=" + URLEncoder.encode(passWord, "UTF-8");
 
 
-            link = "http://140.130.33.101/checkLogin.php" + data;
+            link = "http://140.130.33.152/checkLogin.php" + data;
 
             URL url = new URL(link);
 
